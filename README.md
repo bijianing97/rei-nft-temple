@@ -16,8 +16,6 @@ npm run test:nft
 ```
 ## Environment variables
 - `PRIVATE_KEY`:Deployer private key
-- `name`:Name of the contract
-- `sympol`:Symbol of the contract
 - `uri`:URI of the nft
 - `nftAddress`:Address of the nft after deploy
 

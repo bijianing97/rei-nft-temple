@@ -33,14 +33,14 @@ async function main() {
   const nftInstance = nft.attach(process.env.nftAddress!);
   for (let i = 0; i < Math.ceil(whitelist.length / 10); i++) {
     const users = whitelist.slice(i * 10, i * 10 + 10);
-    const tx = await nftInstance.batchMint(users);
+    const tx = await nftInstance.batchMint(0, users);
     await tx.wait();
     console.log("mint to:", users);
   }
   console.log("mint finished");
 
   for (let i = 0; i < whitelist.length; i++) {
-    const number = await nftInstance.balanceOf(whitelist[i]);
+    const number = await nftInstance.balanceOf(whitelist[i], 0);
     console.log(`${whitelist[i]} has ${number} nft`);
   }
 }

@@ -3,8 +3,6 @@ import { ethers } from "hardhat";
 
 describe("NFT", function () {
   before(async function () {
-    this.name = "name";
-    this.symbol = "symbol";
     this.uri = "uri";
     this.signers = await ethers.getSigners();
     this.deployer = this.signers[0];
@@ -12,26 +10,20 @@ describe("NFT", function () {
     for (let i = 1; i <= 12; i++) {
       this.whitelist.push(this.signers[i]);
     }
-    const reiNFT = await ethers.getContractFactory(
+    const REINFT = await ethers.getContractFactory(
       "ReiGenesisProposalBadgesNFT",
       this.deployer
     );
-    this.nft = await reiNFT.deploy(this.name, this.symbol, this.uri);
+    this.nft = await REINFT.deploy(this.uri);
     this.nftInstance = await this.nft.deployed();
   });
 
-  it("should correctly init", async function () {
-    expect(await this.nftInstance.name()).be.equal(this.name);
-    expect(await this.nftInstance.symbol()).be.equal(this.symbol);
-    expect(await this.nftInstance.tokenURI(1)).be.equal(this.uri);
-  });
-
   it("should mint correctly", async function () {
-    expect(await this.nftInstance.balanceOf(this.deployer.address)).to.equal(
+    expect(await this.nftInstance.balanceOf(this.deployer.address, 0)).to.equal(
       "0"
     );
-    await this.nftInstance.mint(this.deployer.address);
-    expect(await this.nftInstance.balanceOf(this.deployer.address)).to.equal(
+    await this.nftInstance.mint(0, this.deployer.address);
+    expect(await this.nftInstance.balanceOf(this.deployer.address, 0)).to.equal(
       "1"
     );
   });
@@ -40,14 +32,16 @@ describe("NFT", function () {
     const whitelistAddress: any = [];
     await Promise.all(
       this.whitelist.map(async (account: any) => {
-        expect(await this.nftInstance.balanceOf(account.address)).to.equal("0");
+        expect(await this.nftInstance.balanceOf(account.address, 0)).to.equal(
+          "0"
+        );
         whitelistAddress.push(account.address);
       })
     );
-    await this.nftInstance.batchMint(whitelistAddress);
+    await this.nftInstance.batchMint(0, whitelistAddress);
     await Promise.all(
       whitelistAddress.map(async (address: any) => {
-        expect(await this.nftInstance.balanceOf(address)).to.equal("1");
+        expect(await this.nftInstance.balanceOf(address, 0)).to.equal("1");
       })
     );
   });

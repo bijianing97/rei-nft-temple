@@ -2,43 +2,37 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract ReiGenesisProposalBadgesNFT is Context, ERC721, Ownable {
-    string public baseURI;
-    uint256 autoIncreaseTokenId = 0;
+contract ReiGenesisProposalBadgesNFT is Context, ERC1155Supply, Ownable {
+    using Strings for uint256;
+    string public baseURI = "";
 
-    constructor(
-        string memory name,
-        string memory symbol,
-        string memory uri
-    ) ERC721(name, symbol) {
-        baseURI = uri;
+    constructor(string memory baseUri) ERC1155(baseUri) {
+        _setBaseURI(baseUri);
     }
 
-    function mint(address to) public onlyOwner {
-        _safeMint(to, autoIncreaseTokenId);
-        autoIncreaseTokenId++;
+    function mint(uint256 tokenId, address to) public onlyOwner {
+        _mint(to, tokenId, 1, "");
     }
 
-    function batchMint(address[] memory to) public onlyOwner {
+    function batchMint(uint256 tokenId, address[] memory to) public onlyOwner {
         for (uint256 i = 0; i < to.length; i++) {
-            mint(to[i]);
+            mint(tokenId, to[i]);
         }
     }
 
-    function _baseURI() internal view virtual override returns (string memory) {
-        return baseURI;
+    function _setBaseURI(string memory newuri) internal onlyOwner {
+        baseURI = newuri;
     }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override
-        returns (string memory)
-    {
-        return baseURI;
+    function resetBaseURI(string memory newUri) public onlyOwner {
+        _setBaseURI(newUri);
+    }
+
+    function uri(uint256 tokenId) public view override returns (string memory) {
+        return string(abi.encodePacked(baseURI, tokenId.toString(), ".json"));
     }
 }
