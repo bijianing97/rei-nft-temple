@@ -29,7 +29,7 @@ async function main() {
     "\n"
   );
 
-  const nft = await ethers.getContractFactory("ReiGenesisProposalBadgesNFT");
+  const nft = await ethers.getContractFactory("ReiFansNFT");
   const nftInstance = nft.attach(process.env.nftAddress!);
   for (let i = 0; i < Math.ceil(whitelist.length / 10); i++) {
     const users = whitelist.slice(i * 10, i * 10 + 10);
