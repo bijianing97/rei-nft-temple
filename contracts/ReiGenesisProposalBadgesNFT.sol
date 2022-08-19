@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract ReiFansNFT is Context, ERC1155Supply, Ownable {
+contract KoreanCommunityNFT is Context, ERC1155Supply, Ownable {
     using Strings for uint256;
     string public baseURI = "";
 
